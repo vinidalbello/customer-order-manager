@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { formatCurrency, formatDateBrazil } from '$lib/utils/helper';
 
 	// Campo único para filtro (nome ou CPF) e datas para o intervalo
@@ -32,12 +31,6 @@
 				pedidos = data.pedidos;
 				totalGasto = data.totalGasto;
 				message = pedidos.length === 0 ? 'Nenhum pedido encontrado.' : '';
-				// Salva os filtros e resultados no localStorage
-				localStorage.setItem('consultaFiltro', filtro);
-				localStorage.setItem('consultaDataInicio', dataInicio);
-				localStorage.setItem('consultaDataFim', dataFim);
-				localStorage.setItem('consultaPedidos', JSON.stringify(pedidos));
-				localStorage.setItem('consultaTotalGasto', totalGasto.toString());
 			} else {
 				message = data.mensagem || 'Erro ao buscar pedidos.';
 				pedidos = [];
@@ -50,20 +43,6 @@
 			totalGasto = 0;
 		}
 	}
-
-	// No onMount, recupera os filtros e resultados salvos (se houver)
-	onMount(() => {
-		const savedFiltro = localStorage.getItem('consultaFiltro');
-		const savedDataInicio = localStorage.getItem('consultaDataInicio');
-		const savedDataFim = localStorage.getItem('consultaDataFim');
-		const savedPedidos = localStorage.getItem('consultaPedidos');
-		const savedTotalGasto = localStorage.getItem('consultaTotalGasto');
-		if (savedFiltro) filtro = savedFiltro;
-		if (savedDataInicio) dataInicio = savedDataInicio;
-		if (savedDataFim) dataFim = savedDataFim;
-		if (savedPedidos) pedidos = JSON.parse(savedPedidos);
-		if (savedTotalGasto) totalGasto = Number(savedTotalGasto);
-	});
 </script>
 
 <div class="mx-auto max-w-3xl p-6">
