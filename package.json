@@ -2,7 +2,8 @@
   "name": "customer-order-manager",
   "version": "1.0.0",
   "scripts": {
-    "migrate": "npx dbmate up"
+    "migrate": "npx dbmate up",
+    "start": "cd project && npm run start" 
   },
   "devDependencies": {
     "dbmate": "^1.12.0"
