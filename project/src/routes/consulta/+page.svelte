@@ -11,18 +11,27 @@
 	let totalGasto = 0;
 	let message = '';
 
+	// Variável reativa para habilitar o botão somente se todos os filtros forem preenchidos
+	$: filtrosCompletos =
+		filtro.trim().length > 0 && dataInicio.trim().length > 0 && dataFim.trim().length > 0;
+
 	// Função para buscar os pedidos conforme os filtros
 	async function buscarPedidos() {
+		if (!filtrosCompletos) {
+			message = 'Preencha o nome ou CPF e o intervalo de datas.';
+			return;
+		}
+
 		const params = new URLSearchParams();
 		// Se o filtro contiver somente dígitos e tiver 11 caracteres, tratamos como CPF
 		const onlyDigits = filtro.replace(/\D/g, '');
 		if (onlyDigits.length === 11) {
 			params.append('cpf', onlyDigits);
-		} else if (filtro) {
+		} else {
 			params.append('nome', filtro);
 		}
-		if (dataInicio) params.append('data_inicio', dataInicio);
-		if (dataFim) params.append('data_fim', dataFim);
+		params.append('data_inicio', dataInicio);
+		params.append('data_fim', dataFim);
 
 		try {
 			const res = await fetch(`/api/consulta-pedidos?${params.toString()}`);
@@ -46,20 +55,6 @@
 </script>
 
 <div class="mx-auto max-w-3xl p-6">
-	<div class="mb-4">
-		<a href="/" class="flex items-center text-blue-500 hover:text-blue-700">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-6 w-6"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke="currentColor"
-			>
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-			</svg>
-			<span class="ml-2">Voltar</span>
-		</a>
-	</div>
 	<h1 class="mb-6 text-center text-3xl font-bold text-gray-800">Consulta de Pedidos</h1>
 
 	<!-- Formulário de filtros -->
@@ -96,7 +91,8 @@
 		</div>
 		<button
 			on:click={buscarPedidos}
-			class="mt-4 w-full rounded bg-green-500 py-2 text-white transition hover:bg-green-600"
+			class="mt-4 w-full rounded bg-green-500 py-2 text-white transition hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+			disabled={!filtrosCompletos}
 		>
 			Buscar Pedidos
 		</button>
