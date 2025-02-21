@@ -1,0 +1,10 @@
+{
+  "name": "customer-order-manager",
+  "version": "1.0.0",
+  "scripts": {
+    "migrate": "npx dbmate --migrations-dir=./db up"
+  },
+  "devDependencies": {
+    "dbmate": "^1.12.0"
+  }
+}
